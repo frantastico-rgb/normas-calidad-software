@@ -25,7 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
       
       - name: Install dependencies
         run: npm install
@@ -44,3 +43,46 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+```
+
+**Cambio crítico:** Eliminé `cache: 'npm'` de la sección Setup Node.
+
+---
+
+## 🚀 Pasos para Aplicar
+
+### **1. Edita el archivo en GitHub:**
+
+1. Ve a `.github/workflows/deploy.yml`
+2. Click en **✏️ Edit**
+3. **Borra TODO** el contenido
+4. **Pega** el código de arriba (completo)
+5. Commit message: `fix: remove npm cache from workflow (no package-lock.json)`
+6. **Commit changes**
+
+---
+
+### **2. Verifica el nuevo deploy:**
+
+1. Ve a **Actions**
+2. Espera el nuevo workflow (1-2 minutos)
+3. Debería completar **SIN ERRORES** ✅
+
+---
+
+## 📊 Lo Que Debería Pasar
+
+### **En el paso "Setup Node" debería mostrar:**
+```
+Run actions/setup-node@v4
+  with:
+    node-version: 20
+```
+
+**SIN mencionar caché** ✅
+
+### **En "Install dependencies" debería mostrar:**
+```
+Run npm install
+npm WARN deprecated...
+added 131 packages in 15s
