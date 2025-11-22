@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { BookOpen, Users, Briefcase, Building2, Search, MessageCircle, X, Send, Menu, ChevronRight, Filter, Award, Shield, Code, TrendingUp, FileText, Lightbulb } from 'lucide-react';
+import React, { useState } from 'react';
+import { BookOpen, Users, Building2, MessageCircle, X, Send, Filter, Award, Shield, Code, Lightbulb, Calculator, TrendingUp, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend } from 'recharts';
 
-// Datos de normas de calidad
+// ==================== DATOS ====================
+
 const normasData = [
   {
     id: 'iso27001',
@@ -107,6 +109,320 @@ const perfilesData = [
   }
 ];
 
+// ==================== COMPONENTE CALCULADORA ====================
+
+const CalculadoraMetricas = () => {
+  const [metricas, setMetricas] = useState({
+    mtbf: '',
+    mttr: '',
+    tiempoRespuesta: '',
+    complejidad: '',
+    coberturaPruebas: ''
+  });
+
+  const [resultado, setResultado] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMetricas(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const calcularScore = () => {
+    const mtbf = parseFloat(metricas.mtbf) || 0;
+    const mttr = parseFloat(metricas.mttr) || 0;
+    const tiempoRespuesta = parseFloat(metricas.tiempoRespuesta) || 0;
+    const complejidad = parseFloat(metricas.complejidad) || 0;
+    const cobertura = parseFloat(metricas.coberturaPruebas) || 0;
+
+    const scoreFiabilidad = Math.min(100, ((mtbf / 720) * 50) + ((1 - (mttr / 60)) * 50));
+    const scoreEficiencia = Math.max(0, 100 - (tiempoRespuesta / 30) * 100);
+    const scoreMantenibilidad = Math.max(0, 100 - (complejidad * 5));
+    const scoreFuncionalidad = cobertura;
+    const scoreSeguridad = (scoreFiabilidad + scoreMantenibilidad) / 2;
+
+    const scoreGeneral = (
+      scoreFiabilidad * 0.25 +
+      scoreEficiencia * 0.20 +
+      scoreMantenibilidad * 0.20 +
+      scoreFuncionalidad * 0.20 +
+      scoreSeguridad * 0.15
+    );
+
+    const datosRadar = [
+      { caracteristica: 'Fiabilidad', valor: Math.round(scoreFiabilidad), benchmark: 85 },
+      { caracteristica: 'Eficiencia', valor: Math.round(scoreEficiencia), benchmark: 80 },
+      { caracteristica: 'Mantenibilidad', valor: Math.round(scoreMantenibilidad), benchmark: 75 },
+      { caracteristica: 'Funcionalidad', valor: Math.round(scoreFuncionalidad), benchmark: 90 },
+      { caracteristica: 'Seguridad', valor: Math.round(scoreSeguridad), benchmark: 85 }
+    ];
+
+    const recomendaciones = [];
+    
+    if (scoreFiabilidad < 70) {
+      recomendaciones.push({
+        tipo: 'error',
+        area: 'Fiabilidad',
+        mensaje: 'MTBF bajo o MTTR alto. Implementa pruebas de regresión y mejora la gestión de errores.'
+      });
+    }
+    
+    if (scoreEficiencia < 70) {
+      recomendaciones.push({
+        tipo: 'warning',
+        area: 'Eficiencia',
+        mensaje: 'Tiempo de respuesta elevado. Optimiza consultas a BD y considera implementar caché.'
+      });
+    }
+    
+    if (scoreMantenibilidad < 70) {
+      recomendaciones.push({
+        tipo: 'error',
+        area: 'Mantenibilidad',
+        mensaje: 'Complejidad ciclomática alta. Refactoriza funciones complejas en módulos más pequeños.'
+      });
+    }
+    
+    if (scoreFuncionalidad < 80) {
+      recomendaciones.push({
+        tipo: 'warning',
+        area: 'Funcionalidad',
+        mensaje: 'Cobertura de pruebas insuficiente. Objetivo: >80% para código crítico.'
+      });
+    }
+
+    if (recomendaciones.length === 0) {
+      recomendaciones.push({
+        tipo: 'success',
+        area: 'General',
+        mensaje: '¡Excelente! Tu software cumple con los estándares de calidad ISO/IEC 25010.'
+      });
+    }
+
+    setResultado({
+      scoreGeneral: Math.round(scoreGeneral),
+      datosRadar,
+      recomendaciones,
+      nivel: scoreGeneral >= 85 ? 'Excelente' : scoreGeneral >= 70 ? 'Bueno' : scoreGeneral >= 50 ? 'Aceptable' : 'Necesita Mejoras'
+    });
+  };
+
+  const getNivelColor = (nivel) => {
+    switch(nivel) {
+      case 'Excelente': return 'text-green-600 bg-green-50';
+      case 'Bueno': return 'text-blue-600 bg-blue-50';
+      case 'Aceptable': return 'text-yellow-600 bg-yellow-50';
+      default: return 'text-red-600 bg-red-50';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+      <div className="max-w-6xl mx-auto">
+        
+        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+          <div className="flex items-center space-x-4 mb-4">
+            <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg">
+              <Calculator className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold text-gray-800">Calculadora de Métricas</h1>
+              <p className="text-gray-600">ISO/IEC 25010 - Modelo de Calidad del Producto</p>
+            </div>
+          </div>
+          
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <div className="flex items-start space-x-3">
+              <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-semibold mb-1">Sobre esta calculadora:</p>
+                <p>Evalúa la calidad de tu software según 5 características clave del estándar ISO/IEC 25010.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <TrendingUp className="w-6 h-6 mr-2 text-indigo-600" />
+            Ingresa las Métricas de tu Proyecto
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                MTBF - Tiempo Medio Entre Fallos (horas)
+              </label>
+              <input
+                type="number"
+                name="mtbf"
+                value={metricas.mtbf}
+                onChange={handleChange}
+                placeholder="ej. 720 (30 días)"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+              <p className="text-xs text-gray-500 mt-1">Recomendado: &gt;720 horas</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                MTTR - Tiempo Medio de Recuperación (minutos)
+              </label>
+              <input
+                type="number"
+                name="mttr"
+                value={metricas.mttr}
+                onChange={handleChange}
+                placeholder="ej. 15"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+              <p className="text-xs text-gray-500 mt-1">Objetivo: &lt;30 minutos</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Tiempo de Respuesta p95 (milisegundos)
+              </label>
+              <input
+                type="number"
+                name="tiempoRespuesta"
+                value={metricas.tiempoRespuesta}
+                onChange={handleChange}
+                placeholder="ej. 200"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+              <p className="text-xs text-gray-500 mt-1">Objetivo: &lt;300 ms</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Complejidad Ciclomática Promedio
+              </label>
+              <input
+                type="number"
+                name="complejidad"
+                value={metricas.complejidad}
+                onChange={handleChange}
+                placeholder="ej. 8"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+              <p className="text-xs text-gray-500 mt-1">Recomendado: &lt;10</p>
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Cobertura de Pruebas (%)
+              </label>
+              <input
+                type="number"
+                name="coberturaPruebas"
+                value={metricas.coberturaPruebas}
+                onChange={handleChange}
+                placeholder="ej. 85"
+                min="0"
+                max="100"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+              <p className="text-xs text-gray-500 mt-1">Objetivo: &gt;80%</p>
+            </div>
+          </div>
+
+          <button
+            onClick={calcularScore}
+            className="mt-6 w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold py-4 rounded-lg hover:from-indigo-700 hover:to-blue-700 transition-all transform hover:scale-[1.02] shadow-lg flex items-center justify-center space-x-2"
+          >
+            <Calculator className="w-5 h-5" />
+            <span>Calcular Score de Calidad</span>
+          </button>
+        </div>
+
+        {resultado && (
+          <>
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+              <div className="text-center">
+                <div className="inline-block p-4 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full mb-4">
+                  <Award className="w-12 h-12 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">Score de Calidad General</h2>
+                <div className="text-7xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-4">
+                  {resultado.scoreGeneral}/100
+                </div>
+                <span className={`inline-block px-6 py-2 rounded-full font-bold text-lg ${getNivelColor(resultado.nivel)}`}>
+                  {resultado.nivel}
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+                Análisis por Características ISO/IEC 25010
+              </h3>
+              <div className="h-96">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={resultado.datosRadar}>
+                    <PolarGrid stroke="#e5e7eb" />
+                    <PolarAngleAxis 
+                      dataKey="caracteristica" 
+                      tick={{ fill: '#374151', fontSize: 12, fontWeight: 600 }}
+                    />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                    <Radar 
+                      name="Tu Proyecto" 
+                      dataKey="valor" 
+                      stroke="#4f46e5" 
+                      fill="#4f46e5" 
+                      fillOpacity={0.6} 
+                    />
+                    <Radar 
+                      name="Benchmark Industria" 
+                      dataKey="benchmark" 
+                      stroke="#10b981" 
+                      fill="#10b981" 
+                      fillOpacity={0.3} 
+                    />
+                    <Legend />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <Lightbulb className="w-6 h-6 mr-2 text-yellow-500" />
+                Recomendaciones de Mejora
+              </h3>
+              <div className="space-y-4">
+                {resultado.recomendaciones.map((rec, idx) => {
+                  const Icon = rec.tipo === 'success' ? CheckCircle : rec.tipo === 'error' ? AlertCircle : Info;
+                  const colorClass = rec.tipo === 'success' ? 'bg-green-50 border-green-500 text-green-800' :
+                                   rec.tipo === 'error' ? 'bg-red-50 border-red-500 text-red-800' :
+                                   'bg-yellow-50 border-yellow-500 text-yellow-800';
+                  
+                  return (
+                    <div key={idx} className={`border-l-4 p-4 rounded ${colorClass}`}>
+                      <div className="flex items-start space-x-3">
+                        <Icon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold">{rec.area}</p>
+                          <p className="text-sm mt-1">{rec.mensaje}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ==================== COMPONENTE PRINCIPAL APP ====================
+
 const App = () => {
   const [perfilActivo, setPerfilActivo] = useState(null);
   const [vistaActual, setVistaActual] = useState('home');
@@ -114,7 +430,6 @@ const App = () => {
   const [mensajeChat, setMensajeChat] = useState('');
   const [conversacion, setConversacion] = useState([]);
   const [cargando, setCargando] = useState(false);
-  const [menuAbierto, setMenuAbierto] = useState(false);
   const [filtros, setFiltros] = useState({
     foco: 'todos',
     exigencia: 'todos',
@@ -142,7 +457,7 @@ const App = () => {
       
 Normas disponibles: ${normasData.map(n => n.nombre).join(', ')}.
 
-Responde de forma clara y práctica sobre normas de calidad de software, enfocándote en aplicaciones reales.`;
+Responde de forma clara y práctica sobre normas de calidad de software.`;
 
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -170,7 +485,7 @@ Responde de forma clara y práctica sobre normas de calidad de software, enfocá
     } catch (error) {
       setConversacion(prev => [...prev, { 
         rol: 'asistente', 
-        contenido: 'Error al conectar con el asistente. Por favor, intenta de nuevo.' 
+        contenido: 'Error al conectar con el asistente.' 
       }]);
     } finally {
       setCargando(false);
@@ -228,8 +543,8 @@ Responde de forma clara y práctica sobre normas de calidad de software, enfocá
             <div className="flex items-start space-x-3">
               <Award className="w-6 h-6 text-green-400 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold">Mapas Conceptuales</h3>
-                <p className="text-sm text-gray-300">Visualiza la estructura de cada norma</p>
+                <h3 className="font-semibold">Calculadora de Métricas</h3>
+                <p className="text-sm text-gray-300">Evalúa la calidad de tu software</p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
@@ -243,7 +558,7 @@ Responde de forma clara y práctica sobre normas de calidad de software, enfocá
               <MessageCircle className="w-6 h-6 text-pink-400 flex-shrink-0" />
               <div>
                 <h3 className="font-semibold">Asistente Claude</h3>
-                <p className="text-sm text-gray-300">Consultas personalizadas sobre normas</p>
+                <p className="text-sm text-gray-300">Consultas personalizadas</p>
               </div>
             </div>
           </div>
@@ -271,6 +586,14 @@ Responde de forma clara y práctica sobre normas de calidad de software, enfocá
               </div>
             </div>
           </div>
+
+          <button
+            onClick={() => setVistaActual('calculadora')}
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all mb-6 flex items-center justify-center space-x-2 shadow-lg"
+          >
+            <Calculator className="w-6 h-6" />
+            <span>Calculadora de Métricas ISO/IEC 25010</span>
+          </button>
 
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex items-center space-x-2 mb-4">
@@ -406,7 +729,7 @@ Responde de forma clara y práctica sobre normas de calidad de software, enfocá
               <div className="text-center text-gray-500 mt-8">
                 <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p className="text-sm">¡Hola! Soy tu asistente de normas de calidad.</p>
-                <p className="text-xs mt-2">Pregúntame sobre cualquier estándar o práctica.</p>
+                <p className="text-xs mt-2">Pregúntame sobre cualquier estándar.</p>
               </div>
             )}
             
@@ -489,6 +812,26 @@ Responde de forma clara y práctica sobre normas de calidad de software, enfocá
             </div>
           </nav>
           <ComparadorNormas />
+        </>
+      )}
+
+      {vistaActual === 'calculadora' && (
+        <>
+          <nav className="bg-white shadow-sm border-b">
+            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+              <button
+                onClick={() => setVistaActual('normas')}
+                className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-2"
+              >
+                <span>← Volver a Normas</span>
+              </button>
+              <div className="flex items-center space-x-2">
+                <Calculator className="w-5 h-5 text-gray-600" />
+                <span className="text-gray-800 font-semibold">Calculadora de Métricas</span>
+              </div>
+            </div>
+          </nav>
+          <CalculadoraMetricas />
         </>
       )}
 

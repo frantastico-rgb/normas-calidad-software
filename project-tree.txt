@@ -1,0 +1,28 @@
+﻿Project: C:\Users\USUARIO\Desktop\TOTAL NUEVO\sena\ADSO\JAVA\JAVA2931811\norma_software\normas-calidad-software
+- .git/
+  - hooks/
+  - info/
+  - logs/
+  - objects/
+  - refs/
+- .github/
+  - workflows/
+- dist/
+  - assets/
+  - index.html
+- node_modules/
+  (node_modules collapsed)
+- public/
+- src/
+  - App.jsx
+  - index.css
+  - main.jsx
+- .gitignore
+- index.html
+- LICENSE
+- package.json
+- package-lock.json
+- postcss.config.cjs
+- README.md
+- setup-project.ps1
+- tailwind.config.js
