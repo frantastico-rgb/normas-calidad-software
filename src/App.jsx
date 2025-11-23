@@ -814,6 +814,23 @@ Responde de forma clara y práctica sobre normas de calidad de software.`;
           </nav>
           <ComparadorNormas />
           <MapaCID />
+          <div className="max-w-2xl mx-auto mt-10 mb-12 p-8 bg-white rounded-2xl shadow-xl flex flex-col items-center space-y-4 border-2 border-blue-100">
+            <h3 className="text-2xl font-bold text-gray-800 mb-2 text-center">Descarga recursos prácticos</h3>
+            <a
+              href="/estudio-caso-iso27001.pdf"
+              download
+              className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
+            >
+              Download ISO 27001 Case Study (PDF)
+            </a>
+            <a
+              href="/ISO IEC E ISO INTERNACIONAL Integración de Seguridad.pdf"
+              download
+              className="inline-block px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
+            >
+              Download ISO/IEC International Security Integration (PDF)
+            </a>
+          </div>
         </>
       )}
 

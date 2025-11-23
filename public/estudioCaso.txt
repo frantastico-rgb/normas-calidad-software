@@ -1,0 +1,271 @@
+Integraci�n de Seguridad (ISO 27001) y Calidad del Software (ISO 9001 / ISO 25010)
+
+Contenido
+Integraci�n de Seguridad (ISO 27001) y Calidad del Software (ISO 9001 / ISO 25010)	1
+Integraci�n de Seguridad (ISO 27001) y Calidad del Software (ISO 9001 / ISO 25010)	1
+1. La Seguridad como Atributo de Calidad	1
+2. Puntos de Integraci�n en el Ciclo de Vida del Software (SDLC)	2
+3. Rol de la Gesti�n de Riesgos (SGSI) en la Calidad	3
+Modelado de Amenazas (Threat Modeling) y Ciclo de Vida de Desarrollo de Software (SDLC)	3
+1. Posici�n en el SDLC	4
+2. Metodolog�a STRIDE	4
+3. Ejemplo Pr�ctico de Modelado de Amenazas	5
+Paso 1: Diagrama de Flujo de Datos (DFD)	5
+Paso 2: Aplicaci�n de STRIDE	5
+Paso 3: Requisito Final (Historia de Usuario de Seguridad)	6
+INTEGRACION DE HISTORIA DE USUARIO DE SEGURIDD	10
+Integraci�n de la Historia de Usuario de Seguridad en el SDLC	10
+1. Integraci�n en la Gesti�n de Proyectos (Backlog �gil)	10
+A. Creaci�n y Priorizaci�n	10
+B. Definici�n de Hecho (Definition of Done - DoD)	10
+2. Integraci�n en el C�digo y DevSecOps	11
+A. Desarrollo	11
+B. Revisi�n de C�digo (Code Review)	11
+C. Pruebas Automatizadas	11
+3. Trazabilidad y Cumplimiento	12
+Tres casos de uso de ataque	12
+Casos de Prueba de Seguridad para Historias de Usuario Cr�ticas	12
+HDS Cr�tica 1: Sanitizaci�n Profunda de Archivos	13
+HDS Cr�tica 2: Mitigaci�n de Ataque de Denegaci�n de Servicio (DoS)	14
+Conclusi�n	15
+CASO DE PRUEBAS	16
+�Qu� has conseguido con esto?	16
+Verificaci�n de la Mitigaci�n HDS TM-001	17
+Reporte Final de Mitigaci�n de Riesgos de Seguridad	18
+1. Introducci�n y Alcance	18
+2. Mitigaci�n de Riesgo: Denegaci�n de Servicio (DoS)	18
+3. Mitigaci�n de Riesgo: Inyecci�n de C�digo Malicioso por Archivos	19
+4. Resumen y Pr�ximos Pasos	20
+1. Fase Verificar (Checking) - Pruebas Finales y Auditor�a	21
+2. Fase Actuar (Act) - Mejora Continua y Estandarizaci�n	21
+Tarea de Siguiente Paso Sugerida	22
+FORMATO DE AUDITORIA  VERIFCAR Y HACER	22
+Formato de Informe de Auditor�a de Verificaci�n	23
+1. Informaci�n General del Informe	23
+2. Metodolog�a y Criterios de la Auditor�a	23
+2.1 Criterios de la Auditor�a (Est�ndares)	23
+2.2 Metodolog�a de Verificaci�n	23
+3. Resumen Ejecutivo y Conclusi�n	24
+3.1 Nivel General de Cumplimiento	24
+3.2 Puntuaci�n Global de Riesgo (Opcional)	24
+4. Detalle de los Resultados por Control Auditado	24
+5. Hallazgos Detallados (No Conformidades)	25
+No Conformidad N� 1 (Ejemplo: A.14.2.8 - Fallo en Cobertura de C�digo)	25
+6. Acciones Correctivas Recomendadas (FASE ACTUAR)	26
+7. Aprobaci�n y Distribuci�n	26
+NO CONFORMIDAD Y PAC PLAN DE ACCION DE CORRECION	27
+Ejemplo Detallado de No Conformidad Mayor	27
+Criterio para Clasificaci�n de No Conformidad (Gu�a R�pida)	28
+PAC	28
+Plantilla del Plan de Acci�n Correctiva (PAC) y Seguimiento	28
+1. Informaci�n del Plan de Acci�n	28
+2. Detalle y Seguimiento de Acciones	29
+Hallazgo # NC-2025-11-001 (Mayor)	29
+Hallazgo # OBS-2025-11-002 (Observaci�n)	30
+3. Verificaci�n de Eficacia y Cierre del PAC	31
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Integraci�n de Seguridad (ISO 27001) y Calidad del Software (ISO 9001 / ISO 25010)
+Una aplicaci�n de software de calidad no es solo aquella que funciona r�pidamente (Eficiencia) o que no tiene errores de c�digo (Fiabilidad); debe ser, fundamentalmente, segura. La ISO 27001 proporciona el marco para la seguridad, que se convierte en un atributo cr�tico de la calidad del producto.
+1. La Seguridad como Atributo de Calidad
+Seg�n la norma ISO/IEC 25010 (Modelo de Calidad de Software), la seguridad es una de las ocho caracter�sticas primarias de la calidad.
+Caracter�stica ISO 25010
+Descripci�n
+Relaci�n con ISO 27001
+Seguridad
+Capacidad del producto para proteger la informaci�n y los datos.
+Directa: La ISO 27001 es el sistema de gesti�n para alcanzar y mantener esta capacidad.
+Fiabilidad
+Capacidad para mantener el nivel de rendimiento bajo condiciones espec�ficas.
+Parcial: La Disponibilidad (C.I.D.) de ISO 27001 contribuye directamente a la fiabilidad.
+Usabilidad
+Facilidad de uso por parte de usuarios espec�ficos.
+Indirecta: Controles de acceso bien dise�ados (A.9) mejoran la usabilidad sin comprometer la seguridad.
+Eficiencia
+Relaci�n entre el rendimiento y los recursos utilizados.
+Indirecta: El cifrado (A.10) puede reducir la eficiencia; se requiere una gesti�n de riesgos para equilibrar.
+2. Puntos de Integraci�n en el Ciclo de Vida del Software (SDLC)
+El Dominio A.14 (Adquisici�n, desarrollo y mantenimiento de sistemas) de la ISO 27001 es el puente directo con los equipos de desarrollo y calidad.
+Fase del SDLC
+Requisito de Seguridad (ISO 27001)
+Mecanismo de Calidad (ISO 9001 / ISO 25010)
+Dise�o y Requisitos
+A.14.2.1 - An�lisis y especificaci�n de requisitos de seguridad.
+Inclusi�n de historias de usuario de seguridad (Threat Modeling) y criterios de aceptaci�n.
+Codificaci�n
+A.14.2.5 - Principios de ingenier�a de sistemas seguros.
+Uso de herramientas SAST/DAST (An�lisis Est�tico/Din�mico) para garantizar c�digo limpio y sin vulnerabilidades.
+Pruebas
+A.14.2.8 - Pruebas de seguridad de sistemas, incluyendo pruebas de penetraci�n.
+Ejecuci�n de casos de prueba espec�ficos para la seguridad, adem�s de pruebas funcionales y de rendimiento.
+Producci�n / Despliegue
+A.12.1.2 - Gesti�n de cambios.
+Procedimiento formal de DevOps (CI/CD) que incluye validaci�n de seguridad (Security Gates) antes del despliegue.
+3. Rol de la Gesti�n de Riesgos (SGSI) en la Calidad
+El SGSI (ISO 27001) gu�a la calidad al cambiar el enfoque de reactivo a preventivo:
+1. Identificaci�n de Riesgos (Planear): El an�lisis de riesgos de ISO 27001 identifica amenazas espec�ficas para el software (ej. inyecci�n SQL, XSS). Esto asegura que los requisitos de calidad aborden las fallas de seguridad antes de que ocurran. 
+
+
+
+
+
+
+
+
+Modelado de Amenazas (Threat Modeling) y Ciclo de Vida de Desarrollo de Software (SDLC)
+El Modelado de Amenazas es un proceso estructurado para identificar, comunicar y mitigar amenazas dentro de un sistema o aplicaci�n de software. Su objetivo principal es asegurar que los riesgos de seguridad se aborden tempranamente, cuando son m�s f�ciles y econ�micos de corregir.
+1. Posici�n en el SDLC
+El Threat Modeling se realiza idealmente en la fase de Dise�o y Requisitos (temprano en el SDLC).
+Fase del SDLC
+Actividad de Threat Modeling
+1. Dise�o y Requisitos
+An�lisis: Se crea un diagrama de flujo de datos (DFD) del sistema y se identifican las amenazas potenciales usando un marco como STRIDE.
+2. Implementaci�n
+Se documentan los controles de seguridad necesarios (mitigaciones) y se implementan en el c�digo (ej. validaci�n de entradas).
+3. Pruebas
+Se crean casos de prueba espec�ficos para validar que las mitigaciones (controles) implementadas funcionan correctamente.
+4. Despliegue
+Se revisa la configuraci�n del entorno para asegurar que no introduce nuevas vulnerabilidades (ej. permisos incorrectos).
+2. Metodolog�a STRIDE
+STRIDE es el marco m�s com�n para clasificar y entender las amenazas. Fue desarrollado por Microsoft y ayuda a los equipos a generar preguntas sistem�ticas sobre cada componente del sistema.
+Cada letra de STRIDE corresponde a un tipo de amenaza y una propiedad de seguridad que se ve comprometida, lo que a su vez se alinea con los principios de la ISO 27001 (Confidencialidad, Integridad y Disponibilidad - C.I.D.).
+Tipo de Amenaza (STRIDE)
+Propiedad Comprometida
+Descripci�n
+Ejemplo de Amenaza
+Spoofing (Suplantaci�n)
+Autenticaci�n
+Un atacante se hace pasar por otro usuario o sistema.
+Phishing, robo de credenciales.
+Tampering (Manipulaci�n)
+Integridad
+Modificaci�n no autorizada de datos o c�digo.
+Alteraci�n de precios en un carrito de compras.
+Repudiation (Repudio)
+No Repudio
+Un usuario niega haber realizado una acci�n.
+No existe un registro de auditor�a de una transacci�n.
+Information Disclosure (Divulgaci�n)
+Confidencialidad
+Exposici�n de informaci�n a partes no autorizadas.
+Inyecci�n SQL que muestra datos de otros usuarios.
+Denial of Service (Denegaci�n de Servicio)
+Disponibilidad
+Impedir que usuarios leg�timos accedan al servicio.
+Saturaci�n del servidor web con peticiones falsas.
+Elevation of Privilege (Elevaci�n de Privilegio)
+Autorizaci�n
+Un usuario obtiene acceso a funciones que no le corresponden.
+Un usuario normal accede a un panel de administraci�n.
+3. Ejemplo Pr�ctico de Modelado de Amenazas
+Tomemos como ejemplo la funcionalidad de "Restablecimiento de Contrase�a por Correo Electr�nico" en una aplicaci�n web:
+Paso 1: Diagrama de Flujo de Datos (DFD)
+Se identifican los elementos clave y el flujo de informaci�n:
+1. Usuario (Actor) -> 2. Formulario Web (Interfaz) -> 3. Servidor de Aplicaciones (Proceso) -> 4. Base de Datos (Almac�n de Datos) -> 5. Servidor de Correo (Proceso externo).
+Paso 2: Aplicaci�n de STRIDE
+Analizamos el flujo de la solicitud del enlace de restablecimiento:
+Elemento DFD
+Amenaza STRIDE
+Descripci�n y Escenario
+Mitigaci�n (Requisito de Seguridad)
+Formulario Web (2)
+DoS (Disponibilidad)
+Un atacante bombardea el formulario con correos, agotando recursos y enviando miles de correos no deseados.
+Implementar un l�mite de intentos (Rate Limiting) por direcci�n IP o por cuenta en un periodo de tiempo.
+Servidor de Aplicaciones (3)
+Spoofing (Autenticaci�n)
+Un atacante logra adivinar o interceptar el token de restablecimiento.
+El token debe ser de un solo uso, tener una caducidad corta (ej. 30 minutos) y ser criptogr�ficamente seguro (largo y aleatorio).
+Base de Datos (4)
+Information Disclosure (Confidencialidad)
+Si el token se almacena sin cifrar o con una llave d�bil, un atacante con acceso a la DB podr�a usarlo.
+El token debe estar cifrado en reposo o, preferiblemente, almacenar solo su hash para comparaciones.
+Servidor de Correo (5)
+Tampering (Integridad)
+Un atacante manipula el correo de restablecimiento antes de que llegue al usuario.
+Asegurar que los correos salientes usen protocolos de seguridad como TLS para evitar la interceptaci�n del enlace.
+Paso 3: Requisito Final (Historia de Usuario de Seguridad)
+El resultado de este proceso se traduce en requisitos claros para el equipo de desarrollo:
+Como desarrollador de Backend, quiero que el token de restablecimiento de contrase�a sea un valor irreversiblemente hasheado en la base de datos y tenga una validez m�xima de 30 minutos, para prevenir la divulgaci�n de informaci�n sensible (I) y la suplantaci�n de identidad (S).
+Este enfoque garantiza que el control A.14.2.1 de ISO 27001 se implemente de manera efectiva y medible.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Amenaza Mitigada
+Mitigaci�n T�cnica
+Requisito de Seguridad (Historia de Usuario)
+Tampering
+An�lisis de contenido: Re-procesar la imagen o sanitizar el archivo (ej. convertir el JPG y descartar metadatos peligrosos).
+Como desarrollador, quiero que el proceso P1 ejecute una sanitizaci�n profunda a todos los archivos de imagen subidos, para eliminar cualquier c�digo incrustado malicioso (T).
+DoS
+Control de l�mites: Limitar el tama�o m�ximo del archivo subido y el n�mero de archivos por usuario por d�a.
+Como administrador del sistema, quiero limitar la subida a un m�ximo de 5MB por archivo y 10 archivos por usuario por hora, para proteger la disponibilidad del almacenamiento (D).
+Information Disclosure
+Control de acceso: Configurar el Almac�n de Archivos (DS1) para que los archivos privados solo sean accesibles a trav�s de un token generado por el servidor de aplicaciones.
+Como ingeniero de DevOps, quiero que el Almac�n de Archivos DS1 est� configurado con acceso privado, requiriendo que todas las peticiones pasen por un enlace firmado de un solo uso del servidor, para asegurar la confidencialidad de los datos (I).
+
+
+
+
+Getty Images
+2. Tratamiento del Riesgo (Hacer): El Plan de Tratamiento de Riesgos se traduce en acciones de calidad concretas para los desarrolladores (ej. forzar la sanitizaci�n de entradas, utilizar librer�as de cifrado aprobadas).
+3. Monitoreo (Verificar): La auditor�a interna de la ISO 27001 (Cl�usula 9) verifica si los controles de seguridad implementados en el software son efectivos. Esto es una capa adicional a la auditor�a de calidad funcional.
+En resumen, la ISO 27001 no es una norma separada; es el marco de gesti�n que garantiza que el atributo de Seguridad dentro del est�ndar de calidad de tu software se mantenga robusto y se mejore continuamente (Ciclo PDCA).
+
+
+
+INTEGRACION DE HISTORIA DE USUARIO DE SEGURIDD
+
+Integraci�n de la Historia de Usuario de Seguridad en el SDLC
+La Historia de Usuario de Seguridad (HDS) act�a como un puente entre la fase de dise�o de seguridad (Threat Modeling) y la fase de implementaci�n (Codificaci�n y Pruebas). Su integraci�n en la aplicaci�n se realiza a trav�s de las herramientas y procesos de gesti�n de software.
+1. Integraci�n en la Gesti�n de Proyectos (Backlog �gil)
+La HDS debe tratarse exactamente igual que cualquier otra historia de usuario funcional.
+A. Creaci�n y Priorizaci�n
+1. Origen: La HDS nace directamente del proceso de Modelado de Amenazas (STRIDE), donde cada amenaza cr�tica o de alto riesgo necesita una mitigaci�n.
+2. Backlog: Se ingresa como un �tem en el Product Backlog del proyecto (en herramientas como Jira, Azure DevOps o Trello).
+3. Priorizaci�n: Se le asigna una prioridad basada en el riesgo. Las mitigaciones para amenazas cr�ticas (como Spoofing o Elevation of Privilege) deben ser priorizadas junto con las caracter�sticas funcionales m�s importantes, a menudo antes.
+4. Estimaci�n: El equipo de desarrollo le asigna una estimaci�n de esfuerzo (ej. puntos de historia o tiempo) para su implementaci�n, asegurando que el tiempo para construir la seguridad est� presupuestado.
+B. Definici�n de Hecho (Definition of Done - DoD)
+Una HDS solo se considera "Hecha" cuando cumple con criterios claros de aceptaci�n que son verificables por pruebas.
+HDS (Ejemplo: Subida de Archivos)
+Criterio de Aceptaci�n (DoD)
+HDS: Como desarrollador, quiero que el proceso P1 ejecute una sanitizaci�n profunda a todos los archivos de imagen subidos, para eliminar cualquier c�digo incrustado malicioso (T).
+1. El c�digo verifica que la extensi�n del archivo coincide con el tipo MIME real.
+
+2. El archivo es re-procesado por una librer�a de terceros antes de ser almacenado.
+
+3. Se ha a�ad
