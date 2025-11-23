@@ -6,11 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>Normas de Calidad de Software</title>
+    <!-- Botpress Webchat Script and Style -->
+    <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
+    <style>
+        #webchat .bpWebchat {
+            position: unset;
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
+        }
+    
+        #webchat .bpFab {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Botpress Webchat Container -->
+    <div id="webchat" style="width: 500px; height: 500px;"></div>
+    
+    <!-- Botpress Webchat Initialization Script -->
+    <script>
+        window.botpress.on("webchat:ready", () => {
+            window.botpress.open();
+        });
+        window.botpress.init({
+            "botId": "3c22859c-325a-431f-a64a-43fbe06b736a",
+            "configuration": {
+                "version": "v2",
+                "botName": "Friendly AI Assistant",
+                "color": "#3276EA",
+                "variant": "solid",
+                "headerVariant": "glass",
+                "themeMode": "light",
+                "fontFamily": "inter",
+                "radius": 4,
+                "feedbackEnabled": false,
+                "footer": "[⚡ by Botpress](https://botpress.com/?from=webchat)",
+                "soundEnabled": false,
+                "proactiveMessageEnabled": false,
+                "proactiveBubbleMessage": "Hi! 👋 Need help?",
+                "proactiveBubbleTriggerType": "afterDelay",
+                "proactiveBubbleDelayTime": 10
+            },
+            "clientId": "acf6f2e6-7a4e-428a-8161-359696baa01e",
+            "selector": "#webchat"
+        });
+    </script>
 </body>
 
 </html>

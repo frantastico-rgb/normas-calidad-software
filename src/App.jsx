@@ -427,10 +427,7 @@ const CalculadoraMetricas = () => {
 const App = () => {
   const [perfilActivo, setPerfilActivo] = useState(null);
   const [vistaActual, setVistaActual] = useState('home');
-  const [chatAbierto, setChatAbierto] = useState(false);
-  const [mensajeChat, setMensajeChat] = useState('');
-  const [conversacion, setConversacion] = useState([]);
-  const [cargando, setCargando] = useState(false);
+  // Eliminados estados del chat Claude
   const [filtros, setFiltros] = useState({
     foco: 'todos',
     exigencia: 'todos',
@@ -445,53 +442,7 @@ const App = () => {
     return true;
   });
 
-  const enviarMensaje = async () => {
-    if (!mensajeChat.trim()) return;
-
-    const nuevoMensaje = { rol: 'usuario', contenido: mensajeChat };
-    setConversacion(prev => [...prev, nuevoMensaje]);
-    setMensajeChat('');
-    setCargando(true);
-
-    try {
-      const contexto = `Eres un experto en normas de calidad de software. El usuario es un ${perfilesData.find(p => p.id === perfilActivo)?.nombre || 'profesional'}. 
-      
-Normas disponibles: ${normasData.map(n => n.nombre).join(', ')}.
-
-Responde de forma clara y práctica sobre normas de calidad de software.`;
-
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [
-            ...conversacion.map(m => ({
-              role: m.rol === 'usuario' ? 'user' : 'assistant',
-              content: m.contenido
-            })),
-            { role: 'user', content: mensajeChat }
-          ],
-          system: contexto
-        })
-      });
-
-      const data = await response.json();
-      const respuesta = data.content.find(c => c.type === 'text')?.text || 'Lo siento, no pude procesar tu consulta.';
-
-      setConversacion(prev => [...prev, { rol: 'asistente', contenido: respuesta }]);
-    } catch (error) {
-      setConversacion(prev => [...prev, { 
-        rol: 'asistente', 
-        contenido: 'Error al conectar con el asistente.' 
-      }]);
-    } finally {
-      setCargando(false);
-    }
-  };
+  // Eliminada función enviarMensaje del chat Claude
 
   const SelectorPerfil = () => (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
@@ -557,10 +508,7 @@ Responde de forma clara y práctica sobre normas de calidad de software.`;
             </div>
             <div className="flex items-start space-x-3">
               <MessageCircle className="w-6 h-6 text-pink-400 flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold">Asistente Claude</h3>
-                <p className="text-sm text-gray-300">Consultas personalizadas</p>
-              </div>
+              
             </div>
           </div>
         </div>
@@ -704,84 +652,7 @@ Responde de forma clara y práctica sobre normas de calidad de software.`;
     </div>
   );
 
-  const ChatAsistente = () => (
-    <div className={`fixed bottom-4 right-4 z-50 ${chatAbierto ? 'w-96' : 'w-auto'}`}>
-      {!chatAbierto ? (
-        <button
-          onClick={() => setChatAbierto(true)}
-          className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all"
-        >
-          <MessageCircle className="w-6 h-6" />
-        </button>
-      ) : (
-        <div className="bg-white rounded-lg shadow-2xl flex flex-col h-[500px]">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-t-lg flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <MessageCircle className="w-5 h-5" />
-              <span className="font-semibold">Asistente Claude</span>
-            </div>
-            <button onClick={() => setChatAbierto(false)} className="hover:bg-white/20 rounded p-1">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {conversacion.length === 0 && (
-              <div className="text-center text-gray-500 mt-8">
-                <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p className="text-sm">¡Hola! Soy tu asistente de normas de calidad.</p>
-                <p className="text-xs mt-2">Pregúntame sobre cualquier estándar.</p>
-              </div>
-            )}
-            
-            {conversacion.map((msg, idx) => (
-              <div key={idx} className={`flex ${msg.rol === 'usuario' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-lg p-3 ${
-                  msg.rol === 'usuario' 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  <p className="text-sm whitespace-pre-wrap">{msg.contenido}</p>
-                </div>
-              </div>
-            ))}
-            
-            {cargando && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-lg p-3">
-                  <div className="flex space-x-2">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}} />
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}} />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="p-4 border-t">
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={mensajeChat}
-                onChange={(e) => setMensajeChat(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && enviarMensaje()}
-                placeholder="Escribe tu consulta..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-              <button
-                onClick={enviarMensaje}
-                disabled={cargando || !mensajeChat.trim()}
-                className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Send className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  // Eliminado componente ChatAsistente del chat Claude
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -816,20 +687,28 @@ Responde de forma clara y práctica sobre normas de calidad de software.`;
           <MapaCID />
           <div className="max-w-2xl mx-auto mt-10 mb-12 p-8 bg-white rounded-2xl shadow-xl flex flex-col items-center space-y-4 border-2 border-blue-100">
             <h3 className="text-2xl font-bold text-gray-800 mb-2 text-center">Descarga recursos prácticos</h3>
-            <a
-              href="/estudio-caso-iso27001.pdf"
-              download
-              className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
-            >
-              Download ISO 27001 Case Study (PDF)
-            </a>
-            <a
-              href="/ISO IEC E ISO INTERNACIONAL Integración de Seguridad.pdf"
-              download
-              className="inline-block px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
-            >
-              Download ISO/IEC International Security Integration (PDF)
-            </a>
+            {(() => {
+              // Detecta el base path de Vite según entorno
+              const base = import.meta.env.BASE_URL || '/';
+              return (
+                <>
+                  <a
+                    href={`${base}estudio-caso-iso27001.pdf`}
+                    download
+                    className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
+                  >
+                    Download ISO 27001 Case Study (PDF)
+                  </a>
+                  <a
+                    href={`${base}ISO IEC E ISO INTERNACIONAL Integración de Seguridad.pdf`}
+                    download
+                    className="inline-block px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
+                  >
+                    Download ISO/IEC International Security Integration (PDF)
+                  </a>
+                </>
+              );
+            })()}
           </div>
         </>
       )}
@@ -854,7 +733,7 @@ Responde de forma clara y práctica sobre normas de calidad de software.`;
         </>
       )}
 
-      {perfilActivo && <ChatAsistente />}
+      {/* Eliminado ChatAsistente, ahora solo Botpress */}
     </div>
   );
 };
