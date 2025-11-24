@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MapaCID from './MapaCid';
 import { BookOpen, Users, Building2, MessageCircle, X, Send, Filter, Award, Shield, Code, Lightbulb, Calculator, TrendingUp, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend } from 'recharts';
@@ -424,9 +424,20 @@ const CalculadoraMetricas = () => {
 
 // ==================== COMPONENTE PRINCIPAL APP ====================
 
+
 const App = () => {
   const [perfilActivo, setPerfilActivo] = useState(null);
   const [vistaActual, setVistaActual] = useState('home');
+  const [showWelcome, setShowWelcome] = useState(() => {
+    // Solo mostrar si no está oculto en localStorage
+    return localStorage.getItem('hideWelcomeModal') !== 'true';
+  });
+
+  // Si el usuario pulsa salir, no volver a mostrar el modal
+  const handleSalir = () => {
+    localStorage.setItem('hideWelcomeModal', 'true');
+    setShowWelcome(false);
+  };
   // Eliminados estados del chat Claude
   const [filtros, setFiltros] = useState({
     foco: 'todos',
@@ -656,84 +667,121 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {vistaActual === 'home' && <SelectorPerfil />}
-      
-      {vistaActual === 'normas' && (
-        <>
-          <nav className="bg-white shadow-sm border-b">
-            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => {
-                    setVistaActual('home');
-                    setPerfilActivo(null);
-                  }}
-                  className="text-blue-600 hover:text-blue-800 font-semibold"
-                >
-                  ← Cambiar Perfil
-                </button>
-                <span className="text-gray-400">|</span>
-                <span className="text-gray-700">
-                  {perfilesData.find(p => p.id === perfilActivo)?.nombre}
-                </span>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Award className="w-5 h-5 text-gray-600" />
-                <span className="text-gray-800 font-semibold">Normas de Calidad</span>
-              </div>
+      {/* Modal de bienvenida */}
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative flex flex-col items-center">
+            <h2 className="text-3xl font-bold text-indigo-700 mb-4 text-center">¡Bienvenido a NORMAS DE CALIDAD SOFTWARE!</h2>
+            <p className="text-gray-700 mb-4 text-center">Explora, aprende y compara los principales estándares internacionales de calidad de software.<br/>Mira el siguiente video para conocer cómo aprovechar la página:</p>
+            <div className="w-full aspect-video mb-6 rounded-lg overflow-hidden shadow">
+              <iframe
+                width="100%"
+                height="315"
+                src="https://www.youtube.com/embed/mli_-Din2gA"
+                title="Video explicativo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
-          </nav>
-          <ComparadorNormas />
-          <MapaCID />
-          <div className="max-w-2xl mx-auto mt-10 mb-12 p-8 bg-white rounded-2xl shadow-xl flex flex-col items-center space-y-4 border-2 border-blue-100">
-            <h3 className="text-2xl font-bold text-gray-800 mb-2 text-center">Descarga recursos prácticos</h3>
-            {(() => {
-              // Detecta el base path de Vite según entorno
-              const base = import.meta.env.BASE_URL || '/';
-              return (
-                <>
-                  <a
-                    href={`${base}estudio-caso-iso27001.pdf`}
-                    download
-                    className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
-                  >
-                    Download ISO 27001 Case Study (PDF)
-                  </a>
-                  <a
-                    href={`${base}ISO IEC E ISO INTERNACIONAL Integración de Seguridad.pdf`}
-                    download
-                    className="inline-block px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
-                  >
-                    Download ISO/IEC International Security Integration (PDF)
-                  </a>
-                </>
-              );
-            })()}
-          </div>
-        </>
-      )}
-
-      {vistaActual === 'calculadora' && (
-        <>
-          <nav className="bg-white shadow-sm border-b">
-            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex w-full justify-center gap-4">
               <button
-                onClick={() => setVistaActual('normas')}
-                className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-2"
+                className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition"
+                onClick={() => setShowWelcome(false)}
               >
-                <span>← Volver a Normas</span>
+                Entrar
               </button>
-              <div className="flex items-center space-x-2">
-                <Calculator className="w-5 h-5 text-gray-600" />
-                <span className="text-gray-800 font-semibold">Calculadora de Métricas</span>
-              </div>
+              <button
+                className="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow hover:bg-gray-300 transition"
+                onClick={handleSalir}
+              >
+                Salir
+              </button>
             </div>
-          </nav>
-          <CalculadoraMetricas />
-        </>
+          </div>
+        </div>
       )}
 
-      {/* Eliminado ChatAsistente, ahora solo Botpress */}
+      {/* Contenido principal */}
+      {!showWelcome && (
+        <>
+          {vistaActual === 'home' && <SelectorPerfil />}
+          {vistaActual === 'normas' && (
+            <>
+              <nav className="bg-white shadow-sm border-b">
+                <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={() => {
+                        setVistaActual('home');
+                        setPerfilActivo(null);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 font-semibold"
+                    >
+                      ← Cambiar Perfil
+                    </button>
+                    <span className="text-gray-400">|</span>
+                    <span className="text-gray-700">
+                      {perfilesData.find(p => p.id === perfilActivo)?.nombre}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Award className="w-5 h-5 text-gray-600" />
+                    <span className="text-gray-800 font-semibold">Normas de Calidad</span>
+                  </div>
+                </div>
+              </nav>
+              <ComparadorNormas />
+              <MapaCID />
+              <div className="max-w-2xl mx-auto mt-10 mb-12 p-8 bg-white rounded-2xl shadow-xl flex flex-col items-center space-y-4 border-2 border-blue-100">
+                <h3 className="text-2xl font-bold text-gray-800 mb-2 text-center">Descarga recursos prácticos</h3>
+                {(() => {
+                  // Detecta el base path de Vite según entorno
+                  const base = import.meta.env.BASE_URL || '/';
+                  return (
+                    <>
+                      <a
+                        href={`${base}estudio-caso-iso27001.pdf`}
+                        download
+                        className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
+                      >
+                        Download ISO 27001 Case Study (PDF)
+                      </a>
+                      <a
+                        href={`${base}ISO IEC E ISO INTERNACIONAL Integración de Seguridad.pdf`}
+                        download
+                        className="inline-block px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 transition"
+                      >
+                        Download ISO/IEC International Security Integration (PDF)
+                      </a>
+                    </>
+                  );
+                })()}
+              </div>
+            </>
+          )}
+          {vistaActual === 'calculadora' && (
+            <>
+              <nav className="bg-white shadow-sm border-b">
+                <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                  <button
+                    onClick={() => setVistaActual('normas')}
+                    className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-2"
+                  >
+                    <span>← Volver a Normas</span>
+                  </button>
+                  <div className="flex items-center space-x-2">
+                    <Calculator className="w-5 h-5 text-gray-600" />
+                    <span className="text-gray-800 font-semibold">Calculadora de Métricas</span>
+                  </div>
+                </div>
+              </nav>
+              <CalculadoraMetricas />
+            </>
+          )}
+          {/* Eliminado ChatAsistente, ahora solo Botpress */}
+        </>
+      )}
     </div>
   );
 };
