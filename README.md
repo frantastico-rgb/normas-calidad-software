@@ -1,3 +1,78 @@
+# NORMAS DE CALIDAD SOFTWARE
+
+> Aplicación interactiva para explorar normas de calidad de software, SGSI, SPICE (ISO/IEC 15504), y recursos descargables.
+
+---
+
+## 🚀 Características principales
+
+- **Ventana flotante de bienvenida**: Modal que aparece al ingresar por primera vez, con mensaje de bienvenida, video explicativo (YouTube), y botones de entrada/salida. El modal solo se muestra en la primera visita o según preferencia del usuario (usa localStorage).
+
+- **Video introductorio**: Acceso directo a un video explicativo sobre la página, embebido en el modal de bienvenida.
+
+- **Evaluador SPICE (ISO/IEC 15504)**: Evaluador interactivo integrado para la norma ISO/IEC 15504, permitiendo autoevaluación y visualización de resultados.
+
+- **SGSI Interactivo (MapaCid)**: Mapa interactivo completo del Sistema de Gestión de Seguridad de la Información, con:
+	- C.I.D. (Confidencialidad, Integridad, Disponibilidad)
+	- Ciclo PDCA
+	- Dominios de seguridad
+	- Quiz interactivo
+	- Estudio de caso
+
+- **Botones de descarga/exportación PDF**: En la sección de normas, botones rojo y verde permiten descargar recursos PDF:
+	- [Estudio de caso ISO 27001](public/estudio-caso-iso27001.md)
+	- [ISO IEC E ISO INTERNACIONAL Integración de Seguridad.pdf](public/ISO%20IEC%20E%20ISO%20INTERNACIONAL%20Integraci%C3%B3n%20de%20Seguridad.pdf)
+
+- **UI moderna y responsiva**: Construida con React, Vite y Tailwind CSS para una experiencia de usuario ágil y atractiva.
+
+---
+
+## 📁 Estructura del proyecto
+
+- `src/App.jsx`: Lógica principal de la aplicación, modal, evaluador SPICE, botones PDF, y acceso al SGSI Interactivo.
+- `src/MapaCid.jsx`: Componente SGSI Interactivo (C.I.D., PDCA, dominios, quiz, estudio de caso).
+- `public/estudio-caso-iso27001.md`: Recurso descargable de estudio de caso.
+- `public/ISO IEC E ISO INTERNACIONAL Integración de Seguridad.pdf`: PDF descargable sobre integración de seguridad.
+- Otros archivos: configuración de Vite, Tailwind, scripts de setup, favicons, etc.
+
+---
+
+## 🛠️ Instalación y uso
+
+1. Clona el repositorio.
+2. Ejecuta `npm install` para instalar dependencias.
+3. Ejecuta `npm run dev` para iniciar el servidor de desarrollo.
+4. Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
+
+### Scripts disponibles
+
+- `npm install`: Instala las dependencias.
+- `npm run dev`: Ejecuta la app en modo desarrollo.
+- `npm run build`: Genera la build de producción en la carpeta `dist`.
+- `npm run preview`: Sirve la build de producción localmente.
+
+---
+
+## 📦 Dependencias principales
+
+- React
+- Vite
+- Tailwind CSS
+- lucide-react (iconos)
+- recharts (gráficas)
+
+---
+
+## 📚 Recursos y descargas
+
+- [Estudio de caso ISO 27001 (Markdown)](public/estudio-caso-iso27001.md)
+- [ISO IEC E ISO INTERNACIONAL Integración de Seguridad (PDF)](public/ISO%20IEC%20E%20ISO%20INTERNACIONAL%20Integraci%C3%B3n%20de%20Seguridad.pdf)
+
+---
+
+## 📝 Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT.
 # 🎓 Normas de Calidad de Software
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
